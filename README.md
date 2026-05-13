@@ -1,101 +1,122 @@
-# 📊 A-Share Tick Trade Analyzer (Large Orders) by zzy
+# A 股个人投研 Dashboard
 
-A Streamlit-based web application for **real-time analysis** of A-share tick-level trade data.  
-It uses the [`akshare`](https://github.com/akfamily/akshare) API to fetch **tick-by-tick transactions** and provides powerful filtering, aggregation, and visualization functions, especially for large trades.
+这是一个基于 **AKShare + Streamlit + Plotly** 的 A 股个人投研 Dashboard。
 
----
+项目目标不是做“预测股价暴涨”的玩具，而是把行情、技术指标、基本面、资金情绪、技术信号和综合评分组织成一个可维护、可继续扩展的个人研究平台。
 
-## ✨ Features
+> 风险声明：本项目仅用于学习、研究和个人复盘，不构成任何投资建议。
 
-- **Real-time tick data** retrieval via `akshare`  
-- **Custom trade amount filtering** (min / max range)  
-- **Amount range banding** with flexible bins (0-15万, 15-50万, 50-200万, 200万+)  
-- **Nature-based statistics** (Buy, Sell, Neutral)  
-- **Weighted average price** calculation  
-- **Total row in pivot tables** for quick summary  
-- **Horizontal bar charts**: Price vs. Total Trade Amount, split into 5 categories  
-- **Data export** to CSV for both raw trades and summary tables  
-- **Optional raw data view** for detailed inspection
+## 功能概览
 
----
+- 股票代码兼容：`600519`、`000001`、`sh600519`、`sz000001`
+- 首页概览：最新价、涨跌幅、成交额、市值、换手率、主要指数、行业热度
+- 行情分析：K 线、成交量、MA5/10/20/60、EMA、MACD、RSI、BOLL、KDJ
+- 风险统计：支撑位、压力位、阶段高低点、年化波动率、收益率分布、最大回撤
+- 基本面分析：PE、PB、市值、财务指标趋势、财务原始表
+- 资金与情绪：个股资金流向、龙虎榜辅助观察
+- 技术信号：MA 金叉/死叉、MACD 金叉/死叉、RSI、BOLL、放量突破、趋势判断
+- 综合评分：趋势、动量、风险、基本面四维评分
+- 谨慎预测：基于历史波动率的风险区间估计，不做确定性股价预测
 
-## 📸 Screenshots
+## 安装
 
-### 1. Main Interface
-<img width="1920" height="1139" alt="image" src="https://github.com/user-attachments/assets/5c42ed91-d441-4384-89d9-88f7efc9ebd5" />
+建议使用 Python 3.10 或以上版本。
 
-
-### 2. Amount Range Filtering
-<img width="1488" height="665" alt="image" src="https://github.com/user-attachments/assets/79d5f4ba-6c96-41ea-8a7a-c32b1101a191" />
-
-### 3. Horizontal Price Distribution Charts
-<img width="1526" height="674" alt="image" src="https://github.com/user-attachments/assets/77ee4bda-6f85-4b03-872a-28902a0f1ef8" />
-<img width="1514" height="760" alt="image" src="https://github.com/user-attachments/assets/1da8419d-2165-4cd6-880b-dab59b237937" />
-<img width="1420" height="650" alt="image" src="https://github.com/user-attachments/assets/2b968f9e-3487-4d0a-a311-e485295e7abb" />
-<img width="1484" height="649" alt="image" src="https://github.com/user-attachments/assets/40c84b35-1625-4765-a197-4b9d308b6db2" />
-
-
----
-
-## 🛠 Installation
-
-### 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/ashare-tick-analyzer.git
-cd ashare-tick-analyzer
-```
-
-### 2. Create a virtual environment (recommended)
-```bash
-python -m venv venv
-source venv/bin/activate   # On macOS/Linux
-venv\Scripts\activate      # On Windows
-```
-
-### 3. Install dependencies
-```bash
+python -m venv .venv
+.venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
----
-
-## 📦 Requirements
-
-- Python 3.8+
-- [Streamlit](https://streamlit.io/)
-- [Pandas](https://pandas.pydata.org/)
-- [NumPy](https://numpy.org/)
-- [AkShare](https://github.com/akfamily/akshare)
-- [Plotly](https://plotly.com/python/) (for interactive charts)
-
----
-
-## 🚀 Usage
-
-Run the app locally:
+## 运行
 
 ```bash
 streamlit run app.py
 ```
 
-### Parameters (in Sidebar)
+启动后在浏览器中打开 Streamlit 给出的本地地址。
 
-- **Stock Code**: Full code with exchange prefix (e.g., `sh600941`, `sz000001`)
-- **Amount Range**: Min and max trade amount in CNY
-- **Show Raw Data**: Optional checkbox to view the entire tick dataset
+## 项目结构
 
----
+```text
+.
+├── app.py                    # Streamlit 入口，只做页面调度和全局参数
+├── requirements.txt          # 项目依赖
+├── README.md                 # 项目说明
+├── logs/                     # 运行日志目录
+└── src/
+    ├── data/
+    │   ├── akshare_client.py # AKShare 接口、缓存、字段清洗、异常处理
+    │   └── models.py         # 轻量数据模型
+    ├── analysis/
+    │   ├── technical.py      # 技术指标、支撑压力、风险统计
+    │   ├── signals.py        # 技术信号解释
+    │   ├── scoring.py        # 综合评分系统
+    │   └── prediction.py     # 谨慎预测与风险区间
+    ├── ui/
+    │   ├── charts.py         # Plotly 图表
+    │   ├── pages.py          # Streamlit 页面模块
+    │   └── theme.py          # 页面 CSS 风格
+    └── utils/
+        ├── formatters.py     # 数字、金额、百分比格式化
+        └── logger.py         # 日志配置
+```
 
-## 📊 Analysis Output
+这样拆分的原因：
 
-1. **KPI Cards**: Total trades, total amount, amount range  
-2. **Nature-based Summary**: Amount sum & weighted average price  
-3. **Detailed Trades Table**: All trades within selected amount range  
-4. **Banding Summary**: Number of trades, total amount, weighted average price per range  
-5. **Pivot Table (Band × Nature)**: Includes row/column totals  
-6. **Horizontal Price Distribution Charts**:  
-   - **Total** (all trades)  
-   - **Four amount bands** individually  
-   - Y-axis = price, X-axis = total trade amount, horizontal bars for better trend view
+- 数据层只处理 AKShare、缓存、字段统一和异常兜底。
+- 分析层只处理干净的标准字段，便于以后替换数据源。
+- UI 层只负责展示和交互，避免 `app.py` 变成巨型脚本。
+- 初学者可以按“数据 -> 分析 -> 图表 -> 页面”的顺序阅读源码。
 
----
+## 使用的 AKShare 接口
+
+主要接口选择偏向稳定、字段清晰、适合 A 股 Dashboard：
+
+- `stock_zh_a_spot_em`：沪深京 A 股实时行情，适合股票搜索、价格、市值、估值字段。
+- `stock_zh_a_hist`：个股历史行情，支持日线、周线、月线和复权，用于技术分析。
+- `stock_zh_index_spot_em`：主要指数行情，用于展示上证、深证、创业板指数。
+- `stock_board_industry_name_em`：行业板块行情，用于行业热度观察。
+- `stock_financial_analysis_indicator`：个股财务指标，用于 ROE、毛利率、利润增长等基本面分析。
+- `stock_individual_fund_flow`：个股资金流向，用于观察主力资金变化。
+- `stock_lhb_detail_em`：龙虎榜明细，用于市场情绪和异动辅助观察。
+
+所有接口都在 `src/data/akshare_client.py` 中统一封装，使用 `st.cache_data` 缓存，并带异常处理。接口失败时页面会显示提示，不会让整个应用崩溃。
+
+## 指标说明
+
+- MA：简单移动平均线，用于观察趋势方向。
+- EMA：指数移动平均线，对近期价格更敏感。
+- MACD：观察趋势动量变化，常用于辅助判断金叉/死叉。
+- RSI：相对强弱指标，通常用 70/30 观察过热或超卖。
+- BOLL：布林带，用价格相对波动区间观察突破和风险。
+- KDJ：短周期摆动指标，适合辅助观察短线强弱。
+- 最大回撤：从阶段高点到低点的最大跌幅，衡量持有过程中的风险。
+- 年化波动率：收益率标准差年化，反映价格波动程度。
+
+## 综合评分逻辑
+
+综合评分满分 100 分，由四部分组成：
+
+- 趋势评分 35%：均线排列、价格相对均线位置、近期涨跌幅。
+- 动量评分 25%：RSI、MACD、近期涨跌和成交量变化。
+- 风险评分 20%：波动率、最大回撤、放量下跌、异常波动。
+- 基本面评分 20%：ROE、利润增长、估值和财务质量。
+
+评分是研究框架，不是交易系统。它的作用是帮助你更快发现“值得继续研究的问题”，而不是替你做买卖决定。
+
+## 当前局限性
+
+- AKShare 依赖外部数据源，部分接口可能因网络、源站变动或限流失败。
+- 财务字段在不同 AKShare 版本中可能有轻微差异，本项目做了关键词匹配，但不保证所有股票都能识别完整。
+- 行业归属目前只展示行业板块热度，未强行给个股匹配行业，避免制造不可靠数据。
+- 预测模块只估计风险区间，不预测确定价格。
+
+## 后续可扩展方向
+
+- 增加自选股组合和批量评分。
+- 增加行业成分股对比和同行业排名。
+- 增加公告、研报、新闻事件标注。
+- 增加指数择时和市场宽度指标。
+- 增加本地 SQLite 缓存，减少重复请求 AKShare。
+- 增加回测模块，但必须明确交易成本、滑点和样本外验证。
